@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 function phoneToEmail(phone) {
-  return `${phone.replace(/\D/g, "")}@fixittt.com`;
+  return `${phone.replace(/\D/g, "")}@gmail.com`;
 }
 
 export default function Login() {

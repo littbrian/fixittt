@@ -7,6 +7,8 @@ import PostJob from './pages/PostJob'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Jobs from './pages/Jobs'
+import Admin from './pages/Admin'
+import AdminLogin from './pages/AdminLogin'
 
 export default function App() {
   return (
@@ -19,6 +21,8 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/jobs" element={<Jobs />} />
+      <Route path="/admin" element={<Admin />} />
+      <Route path="/admin/login" element={<AdminLogin />} />
     </Routes>
   )
 }

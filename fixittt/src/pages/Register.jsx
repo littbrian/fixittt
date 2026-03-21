@@ -18,7 +18,7 @@ const tradeIcons = {
 const steps = ["Your Details", "Your Trade", "Review & Submit"];
 
 function phoneToEmail(phone) {
-  return `${phone.replace(/\D/g, "")}@fixittt.com`;
+  return `${phone.replace(/\D/g, "")}@gmail.com`;
 }
 
 export default function Register() {
@@ -113,7 +113,7 @@ export default function Register() {
     if (!profileError) {
       setSubmitted(true);
     } else {
-      console.error(profileError);
+      console.log("Profile error:", JSON.stringify(profileError));
       setErrors({ phone: "Something went wrong. Please try again." });
     }
   }

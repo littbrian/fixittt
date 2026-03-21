@@ -48,7 +48,11 @@ export default function Jobs() {
       query = query.eq("trade", tradesman.trade).eq("area", tradesman.area);
     }
 
-    const { data } = await query;
+    const { data, error } = await query;
+    console.log("Jobs data:", data);
+    console.log("Jobs error:", error);
+    console.log("Filter:", filter);
+    console.log("Tradesman:", tradesman);
     setJobs(data || []);
     setLoadingJobs(false);
   }

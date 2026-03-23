@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
+
 
 const trades = [
   "All Trades", "Plumber", "Electrician", "AC Tech",
@@ -44,43 +46,7 @@ export default function Home() {
     <div className="min-h-screen bg-[#f7f4ef] font-dm">
 
       {/* ── NAV ── */}
-      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-gold rounded-lg flex items-center justify-center text-white font-bold text-sm">
-              FX
-            </div>
-            <span className="font-syne font-bold text-xl text-navy">
-              FixIt<span className="text-gold">TT</span>
-            </span>
-          </div>
-          <div className="hidden md:flex items-center gap-8 text-sm text-slate-500">
-            <button onClick={() => navigate("/tradesmen")} className="hover:text-navy transition-colors">
-              Find Tradesmen
-            </button>
-            <button onClick={() => navigate("/post-job")} className="hover:text-navy transition-colors">
-              Post a Job
-            </button>
-            <button onClick={() => navigate("/register")} className="hover:text-navy transition-colors">
-              How it Works
-            </button>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate("/post-job")}
-              className="hidden md:block px-4 py-2 text-sm font-medium text-navy bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
-            >
-              Post a Job
-            </button>
-            <button
-              onClick={() => navigate("/register")}
-              className="px-4 py-2 text-sm font-bold text-white bg-gold rounded-lg hover:bg-yellow-600 transition-colors"
-            >
-              List My Trade
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* ── HERO ── */}
       <section className="bg-navy relative overflow-hidden">

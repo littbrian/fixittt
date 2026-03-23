@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Navbar from "../components/Navbar";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -25,28 +26,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-[#f7f4ef] font-dm">
 
       {/* NAV */}
-      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <button onClick={() => navigate("/")} className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-gold rounded-lg flex items-center justify-center text-white font-bold text-sm">FX</div>
-            <span className="font-syne font-bold text-xl text-navy">FixIt<span className="text-gold">TT</span></span>
-          </button>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate("/jobs")}
-              className="text-sm font-bold text-navy hover:text-gold transition-colors"
-            >
-              Browse Jobs
-            </button>
-            <button
-              onClick={signOut}
-              className="text-sm text-slate-500 hover:text-navy transition-colors"
-            >
-              Log Out
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="max-w-3xl mx-auto px-6 py-12">
 

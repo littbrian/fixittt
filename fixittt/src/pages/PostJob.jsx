@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import Navbar from "../components/Navbar";
 
 const trades = [
   "Plumber", "Electrician", "AC Tech",
@@ -187,14 +188,8 @@ export default function PostJob() {
   // ── SUCCESS SCREEN ──
   if (submitted) return (
     <div className="min-h-screen bg-[#f7f4ef] font-dm">
-      <nav className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <button onClick={() => navigate("/")} className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-gold rounded-lg flex items-center justify-center text-white font-bold text-sm">FX</div>
-            <span className="font-syne font-bold text-xl text-navy">FixIt<span className="text-gold">TT</span></span>
-          </button>
-        </div>
-      </nav>
+     
+     <Navbar />
 
       <div className="max-w-3xl mx-auto px-6 py-12">
 

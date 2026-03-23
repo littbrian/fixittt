@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import Navbar from "../components/Navbar";
 
 const tradeIcons = {
   Plumber: "🔧", Electrician: "⚡", "AC Tech": "❄️",
@@ -124,26 +125,7 @@ export default function Profile() {
     <div className="min-h-screen bg-[#f7f4ef] font-dm">
 
       {/* ── NAV ── */}
-      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <button onClick={() => navigate("/")} className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-gold rounded-lg flex items-center justify-center text-white font-bold text-sm">FX</div>
-            <span className="font-syne font-bold text-xl text-navy">FixIt<span className="text-gold">TT</span></span>
-          </button>
-          <button
-            onClick={() => navigate(-1)}
-            className="text-sm text-slate-500 hover:text-navy transition-colors flex items-center gap-1"
-          >
-            ← Back to results
-          </button>
-          <button
-            onClick={() => navigate("/register")}
-            className="px-4 py-2 text-sm font-bold text-white bg-gold rounded-lg hover:bg-yellow-600 transition-colors"
-          >
-            List My Trade
-          </button>
-        </div>
-      </nav>
+    <Navbar />
 
       {/* ── HERO BANNER ── */}
       <div className="bg-navy relative overflow-hidden">

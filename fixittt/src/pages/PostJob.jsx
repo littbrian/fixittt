@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import Navbar from "../components/Navbar";
+import { sanitise } from "../lib/sanitise";
+import { useAuth } from "../context/AuthContext";
+
+
 
 const trades = [
   "Plumber", "Electrician", "AC Tech",
@@ -110,6 +114,12 @@ export default function PostJob() {
   const [loadingMatches, setLoadingMatches] = useState(false);
   const [errors, setErrors] = useState({});
 
+
+  const [honeypot, setHoneypot] = useState("");
+  const { user } = useAuth();
+  useEffect(() => {
+      if (!user) navigate("/homeowner-login");
+    }, [user]);
   const [form, setForm] = useState({
     contact_name: "",
     contact_phone: "",
@@ -162,17 +172,21 @@ export default function PostJob() {
   }
 
   async function handleSubmit(e) {
+
+    if (honeypot) return;
+
+
     e.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
 
     const { error } = await supabase.from("jobs").insert({
-      contact_name: form.contact_name.trim(),
-      contact_phone: form.contact_phone.trim(),
+      contact_name: sanitise(form.contact_name.trim()),
+      contact_phone: sanitise(form.contact_phone.trim()),
       trade: form.trade,
       area: form.area,
       urgency: form.urgency,
-      description: form.description.trim(),
+      description: sanitise(form.description.trim()),
       active: true,
     });
 
@@ -471,6 +485,17 @@ export default function PostJob() {
               />
               {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
             </div>
+            
+            {/* Honeypot */}
+            <input
+              type="text"
+              name="website"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+              style={{ display: "none" }}
+              tabIndex="-1"
+              autoComplete="off"
+            />
 
             <button
               type="submit"

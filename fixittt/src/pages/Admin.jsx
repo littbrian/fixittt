@@ -134,11 +134,8 @@ export default function Admin() {
     return "Just now";
   }
 
-  if (!isAdmin) return (
-    <div className="min-h-screen bg-navy flex items-center justify-center">
-      <div className="text-slate-400 text-sm animate-pulse">Checking access...</div>
-    </div>
-  );
+  if (!isAdmin) return <div className="min-h-screen bg-navy" />;
+  
 
   return (
     <div className="min-h-screen bg-[#f7f4ef] font-dm">

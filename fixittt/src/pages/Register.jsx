@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import Navbar from "../components/Navbar";
+import { sanitise } from "../lib/sanitise";
+
+
 
 
 const trades = [
@@ -29,6 +32,7 @@ export default function Register() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState({});
+  const [honeypot, setHoneypot] = useState("");
 
   const [form, setForm] = useState({
     name: "",
@@ -53,9 +57,12 @@ export default function Register() {
       if (!form.phone.trim()) errs.phone = "Phone number is required";
       if (form.phone.replace(/\D/g, "").length < 7)
         errs.phone = "Enter a valid phone number";
-      if (!form.password || form.password.length < 6)
-        errs.password = "Password must be at least 6 characters";
+      if (!form.password || form.password.length < 8)
+        errs.password = "Password must be at least 8 characters";
+      else if (!/(?=.*[0-9])/.test(form.password))
+        errs.password = "Password must contain at least one number";
     }
+
     if (step === 1) {
       if (!form.trade) errs.trade = "Please select a trade";
       if (!form.area) errs.area = "Please select your area";
@@ -73,6 +80,9 @@ export default function Register() {
   }
 
   async function handleSubmit() {
+
+    if (honeypot) return;
+
     if (!validateStep()) return;
     setSubmitting(true);
 
@@ -98,9 +108,10 @@ export default function Register() {
     // 2. Insert tradesman profile linked to auth user
     const { error: profileError } = await supabase.from("tradesmen").insert({
       user_id: authData.user.id,
-      name: form.name.trim(),
-      phone: form.phone.trim(),
-      whatsapp: form.whatsapp.trim() || form.phone.trim(),
+      name: sanitise(form.name.trim()),
+      bio: sanitise(form.bio.trim()),
+      phone: sanitise(form.phone.trim()),
+      whatsapp: sanitise(form.whatsapp.trim() || form.phone.trim()),
       trade: form.trade,
       area: form.area,
       years_experience: parseInt(form.years_experience) || 0,
@@ -384,6 +395,19 @@ export default function Register() {
               </div>
             </div>
           )}
+
+          
+          {/* Honeypot — hidden from humans, bots fill it */}
+            <input
+              type="text"
+              name="website"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+              style={{ display: "none" }}
+              tabIndex="-1"
+              autoComplete="off"
+            />
+
 
           {/* Buttons */}
           <div className="flex gap-3 mt-8">

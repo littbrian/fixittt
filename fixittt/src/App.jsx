@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard'
 import Jobs from './pages/Jobs'
 import Admin from './pages/Admin'
 import AdminLogin from './pages/AdminLogin'
+import HomeownerLogin from './pages/HomeownerLogin'
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
       <Route path="/jobs" element={<Jobs />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/homeowner-login" element={<HomeownerLogin />} />
     </Routes>
   )
 }

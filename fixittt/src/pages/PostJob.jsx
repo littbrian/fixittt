@@ -87,7 +87,7 @@ function MatchCard({ t, navigate }) {
 
       <div className="flex gap-2">
         
-        <a
+        
           href={`https://wa.me/${t.whatsapp || t.phone}`}
           target="_blank"
           rel="noreferrer"
@@ -181,6 +181,7 @@ export default function PostJob() {
     setSubmitting(true);
 
     const { error } = await supabase.from("jobs").insert({
+      user_id: user.id,
       contact_name: sanitise(form.contact_name.trim()),
       contact_phone: sanitise(form.contact_phone.trim()),
       trade: form.trade,

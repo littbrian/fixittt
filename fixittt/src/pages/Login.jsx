@@ -2,14 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-function phoneToEmail(phone) {
-  return `${phone.replace(/\D/g, "")}@gmail.com`;
-}
-
 export default function Login() {
   const navigate = useNavigate();
   const { signIn } = useAuth();
-  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -19,11 +15,15 @@ export default function Login() {
     setError(null);
     setLoading(true);
 
-    const { error } = await signIn(phoneToEmail(phone), password);
+    const { error } = await signIn(email.trim().toLowerCase(), password);
 
     setLoading(false);
     if (error) {
-      setError("Incorrect phone number or password. Please try again.");
+      if (error.message.includes("Email not confirmed")) {
+        setError("Please confirm your email before logging in. Check your inbox.");
+      } else {
+        setError("Incorrect email or password. Please try again.");
+      }
     } else {
       navigate("/dashboard");
     }
@@ -50,12 +50,13 @@ export default function Login() {
 
             <div>
               <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
-                Phone Number
+                Email
               </label>
               <input
-                value={phone}
-                onChange={(e) => { setPhone(e.target.value); setError(null); }}
-                placeholder="e.g. 868-XXX-XXXX"
+                type="email"
+                value={email}
+                onChange={(e) => { setEmail(e.target.value); setError(null); }}
+                placeholder="e.g. priya@gmail.com"
                 className={`w-full px-4 py-3 rounded-xl border text-sm focus:outline-none focus:border-gold transition-colors ${
                   error ? "border-red-400 bg-red-50" : "border-slate-200 bg-slate-50"
                 }`}
@@ -87,7 +88,7 @@ export default function Login() {
 
             <button
               type="submit"
-              disabled={loading || !phone || !password}
+              disabled={loading || !email || !password}
               className="w-full py-3.5 bg-navy text-white font-bold text-sm rounded-xl hover:bg-navy/80 transition-colors disabled:opacity-40"
             >
               {loading ? "Logging in..." : "Log In"}

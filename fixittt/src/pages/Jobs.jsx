@@ -52,10 +52,7 @@ export default function Jobs() {
     }
 
     const { data, error } = await query;
-    console.log("Jobs data:", data);
-    console.log("Jobs error:", error);
-    console.log("Filter:", filter);
-    console.log("Tradesman:", tradesman);
+    if (error) console.error("Failed to load jobs:", error);
     setJobs(data || []);
     setLoadingJobs(false);
   }
@@ -208,7 +205,7 @@ export default function Jobs() {
                     💬 Contact on WhatsApp
                   </a>
                   
-                   <a
+                   
                     href={`tel:${job.contact_phone.replace(/\D/g, "")}`}
                     className="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-navy text-sm font-bold rounded-xl transition-colors"
                   >

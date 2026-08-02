@@ -22,10 +22,6 @@ const tradeIcons = {
 
 const steps = ["Your Details", "Your Trade", "Review & Submit"];
 
-function phoneToEmail(phone) {
-  return `${phone.replace(/\D/g, "")}@gmail.com`;
-}
-
 export default function Register() {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
@@ -36,6 +32,7 @@ export default function Register() {
 
   const [form, setForm] = useState({
     name: "",
+    email: "",
     phone: "",
     whatsapp: "",
     password: "",
@@ -54,6 +51,9 @@ export default function Register() {
     const errs = {};
     if (step === 0) {
       if (!form.name.trim()) errs.name = "Name is required";
+      if (!form.email.trim()) errs.email = "Email is required";
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
+        errs.email = "Enter a valid email address";
       if (!form.phone.trim()) errs.phone = "Phone number is required";
       if (form.phone.replace(/\D/g, "").length < 7)
         errs.phone = "Enter a valid phone number";
@@ -86,20 +86,23 @@ export default function Register() {
     if (!validateStep()) return;
     setSubmitting(true);
 
-    const fakeEmail = phoneToEmail(form.phone);
+    const email = sanitise(form.email.trim().toLowerCase());
 
-    // 1. Create auth account using phone-derived email
+    // 1. Create auth account using real email
     const { data: authData, error: authError } = await supabase.auth.signUp({
-      email: fakeEmail,
+      email,
       password: form.password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/login`,
+      },
     });
 
     if (authError) {
-      // Phone already registered
+      // Email already registered
       if (authError.message.includes("already registered")) {
-        setErrors({ phone: "This phone number is already registered. Please log in." });
+        setErrors({ email: "This email is already registered. Please log in." });
       } else {
-        setErrors({ phone: authError.message });
+        setErrors({ email: authError.message });
       }
       setSubmitting(false);
       return;
@@ -127,7 +130,7 @@ export default function Register() {
       setSubmitted(true);
     } else {
       console.log("Profile error:", JSON.stringify(profileError));
-      setErrors({ phone: "Something went wrong. Please try again." });
+      setErrors({ email: "Something went wrong. Please try again." });
     }
   }
 
@@ -203,16 +206,15 @@ export default function Register() {
                 </span>
               </div>
               {i < steps.length - 1 && (
-                <div className={`w-16 h-0.5 mx-2 mb-5 transition-colors ${i < step ? "bg-green-500" : "bg-slate-200"}`} />
+                <div className={`w-16 h-0.5 mx-2 mb-5 ${i < step ? "bg-green-500" : "bg-slate-200"}`} />
               )}
             </div>
           ))}
         </div>
 
-        {/* Form card */}
         <div className="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
 
-          {/* Step 0 — Personal details */}
+          {/* Step 0 — Your details */}
           {step === 0 && (
             <div className="space-y-5">
               <h2 className="font-syne font-bold text-navy text-xl mb-6">Your Details</h2>
@@ -234,6 +236,25 @@ export default function Register() {
 
               <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                  Email <span className="text-red-400">*</span>
+                </label>
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => set("email", e.target.value)}
+                  placeholder="e.g. dillon@gmail.com"
+                  className={`w-full px-4 py-3 rounded-xl border text-sm focus:outline-none focus:border-gold transition-colors ${
+                    errors.email ? "border-red-400 bg-red-50" : "border-slate-200 bg-slate-50"
+                  }`}
+                />
+                <p className="text-slate-400 text-xs mt-1">
+                  This is your login username — we'll send a confirmation link here.
+                </p>
+                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
                   Phone / WhatsApp Number <span className="text-red-400">*</span>
                 </label>
                 <input
@@ -245,7 +266,7 @@ export default function Register() {
                   }`}
                 />
                 <p className="text-slate-400 text-xs mt-1">
-                  This is your login username — homeowners will contact you on this number.
+                  Homeowners will contact you on this number.
                 </p>
                 {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
               </div>
@@ -276,7 +297,7 @@ export default function Register() {
                   }`}
                 />
                 <p className="text-slate-400 text-xs mt-1">
-                  You'll use your phone number + this password to log in.
+                  You'll use your email + this password to log in.
                 </p>
                 {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
               </div>
@@ -366,6 +387,7 @@ export default function Register() {
               <div className="space-y-1 mb-8">
                 {[
                   ["Name", form.name],
+                  ["Email", form.email],
                   ["Phone", form.phone],
                   ["WhatsApp", form.whatsapp || form.phone],
                   ["Trade", `${tradeIcons[form.trade]} ${form.trade}`],
